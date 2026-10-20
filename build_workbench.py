@@ -172,13 +172,13 @@ def main():
     data = {"grants": grants, "facts": [dict(key=k, label=l, hint=h) for k, l, h in FACTS]}
     payload = json.dumps(data, ensure_ascii=False).replace("</", "<\\/")
     html = TEMPLATE.read_text(encoding="utf-8").replace("__DATA__", payload)
-    OUT.write_text(html, encoding="utf-8")
+    OUT.write_text(html, encoding="utf-8", newline="\n")
     # Standalone copy for GitHub Pages (a full HTML document so Thai text renders correctly)
     site = HERE / "docs" / "index.html"
     site.parent.mkdir(exist_ok=True)
     site.write_text('<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n'
                     '<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">\n'
-                    '</head>\n<body>\n' + html + '\n</body>\n</html>\n', encoding="utf-8")
+                    '</head>\n<body>\n' + html + '\n</body>\n</html>\n', encoding="utf-8", newline="\n")
     nfields = sum(len(gr["fields"]) for g in grants for gr in g["groups"])
     nblanks = sum(len(re.findall(r"\[FILL[^\]]*\]", f["body"])) for g in grants for gr in g["groups"] for f in gr["fields"])
     print(f"Written {OUT.name}: {len(grants)} grants, {nfields} fields, {nblanks} blanks to fill")
